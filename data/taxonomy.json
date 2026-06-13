@@ -1,0 +1,615 @@
+{
+  "techniques": [
+    {
+      "id": "KA-IDF-001",
+      "name": "Synthetic identity",
+      "category": "identity_fraud",
+      "description": "A fabricated identity that blends real and made-up data (e.g. a valid-but-unused SSN paired with an invented name/DOB) to pass onboarding and build credit before 'busting out'. A leading first-party fraud vector.",
+      "red_flags": [
+        "Thin or contradictory credit file vs. claimed age",
+        "SSN issued recently or inconsistent with DOB",
+        "Many applications sharing PII fragments (same phone/SSN, different names)",
+        "Authorized-user piggybacking to fabricate history"
+      ],
+      "controls": [
+        "Cross-record PII correlation across applicants",
+        "SSN-issuance/date-of-birth consistency checks",
+        "Velocity rules on shared identifiers",
+        "Step-up verification on thin files"
+      ],
+      "capabilities": [
+        "database_idv",
+        "email_phone_intelligence",
+        "device_intelligence",
+        "risk_scoring"
+      ]
+    },
+    {
+      "id": "KA-IDF-002",
+      "name": "Stolen / first-party identity theft",
+      "category": "identity_fraud",
+      "description": "Use of a real victim's genuine identity data to open or take over accounts.",
+      "red_flags": [
+        "Identity data appearing in known breach corpora",
+        "Geolocation/device mismatch vs. the genuine holder",
+        "Recently changed contact details before high-risk actions"
+      ],
+      "controls": [
+        "Knowledge-/possession-based step-up auth",
+        "Breached-credential checks",
+        "Device + behavioral binding to the genuine holder"
+      ],
+      "capabilities": [
+        "database_idv",
+        "email_phone_intelligence",
+        "device_intelligence",
+        "behavioral_biometrics"
+      ]
+    },
+    {
+      "id": "KA-DOC-001",
+      "name": "Forged or altered identity document",
+      "category": "document_fraud",
+      "description": "Submission of a counterfeit, tampered, or templated ID document during KYC.",
+      "red_flags": [
+        "Font/MRZ/checksum inconsistencies",
+        "Security-feature anomalies under analysis",
+        "Reused document image hashes across applicants",
+        "Metadata indicating editing software"
+      ],
+      "controls": [
+        "Automated document authentication (MRZ/checksum, security features)",
+        "Image-hash reuse detection",
+        "Issuing-authority database cross-check"
+      ],
+      "capabilities": [
+        "document_verification",
+        "database_idv"
+      ]
+    },
+    {
+      "id": "KA-DOC-002",
+      "name": "Genuine document, wrong holder",
+      "category": "document_fraud",
+      "description": "A real, valid document presented by someone other than its rightful holder.",
+      "red_flags": [
+        "Document valid but face/liveness mismatch",
+        "Same document across multiple applicants"
+      ],
+      "controls": [
+        "Document-to-selfie biometric match",
+        "Liveness + presentation-attack detection"
+      ],
+      "capabilities": [
+        "document_verification",
+        "biometric_match",
+        "liveness_detection"
+      ]
+    },
+    {
+      "id": "KA-BIO-001",
+      "name": "Deepfake / injected media",
+      "category": "biometric_spoofing",
+      "description": "Synthetic or injected video/imagery used to defeat selfie/liveness checks (camera-injection, virtual cameras, AI face swaps).",
+      "red_flags": [
+        "Virtual-camera / emulator signals",
+        "Frame-injection artifacts",
+        "Liveness-challenge response anomalies",
+        "Device-integrity failures"
+      ],
+      "controls": [
+        "Injection-attack detection",
+        "Active + passive liveness",
+        "Device-integrity/attestation checks"
+      ],
+      "capabilities": [
+        "liveness_detection",
+        "biometric_match",
+        "device_intelligence"
+      ]
+    },
+    {
+      "id": "KA-BIO-002",
+      "name": "Presentation attack",
+      "category": "biometric_spoofing",
+      "description": "Printed photo, replayed video, or mask used to spoof a face check.",
+      "red_flags": [
+        "Flat / 2D depth signals",
+        "Screen moire / replay artifacts",
+        "Challenge-response timing anomalies"
+      ],
+      "controls": [
+        "Presentation-attack detection (PAD)",
+        "Randomized active-liveness challenges"
+      ],
+      "capabilities": [
+        "liveness_detection",
+        "biometric_match"
+      ]
+    },
+    {
+      "id": "KA-ONB-001",
+      "name": "Money-mule onboarding",
+      "category": "onboarding_abuse",
+      "description": "Recruited or complicit individuals open genuine accounts to receive and move illicit funds on behalf of others.",
+      "red_flags": [
+        "Rapid post-onboarding inbound then outbound transfers",
+        "Account dormant then suddenly high-velocity",
+        "Shared devices/IPs across many 'independent' new accounts",
+        "Onboarding clusters by time/geo/device"
+      ],
+      "controls": [
+        "Device + network clustering at onboarding",
+        "Mule-pattern transaction rules",
+        "Post-onboarding behavioral monitoring",
+        "Cross-account network analysis"
+      ],
+      "capabilities": [
+        "device_intelligence",
+        "transaction_monitoring",
+        "behavioral_biometrics",
+        "risk_scoring"
+      ]
+    },
+    {
+      "id": "KA-ATO-001",
+      "name": "Account takeover (ATO)",
+      "category": "account_takeover",
+      "description": "Compromise of an existing, verified account via credential stuffing, phishing, SIM-swap, or social engineering \u2014 bypassing onboarding KYC entirely.",
+      "red_flags": [
+        "New device + new geo + immediate high-risk action",
+        "Contact-detail change followed by withdrawals",
+        "SIM-swap indicators (recent port, carrier change)"
+      ],
+      "controls": [
+        "Step-up auth on risky sessions",
+        "SIM-swap / phone-intelligence checks",
+        "Behavioral-biometric continuity",
+        "Change-of-detail cool-down + monitoring"
+      ],
+      "capabilities": [
+        "device_intelligence",
+        "behavioral_biometrics",
+        "email_phone_intelligence"
+      ]
+    },
+    {
+      "id": "KA-MLP-001",
+      "name": "Structuring / smurfing",
+      "category": "ml_placement",
+      "description": "Breaking large sums into many sub-threshold deposits/transfers (across people, accounts, or time) to avoid reporting thresholds. FATF placement typology.",
+      "red_flags": [
+        "Many transactions just under reporting thresholds",
+        "Coordinated sub-threshold activity across linked parties",
+        "Round-number clustering near limits"
+      ],
+      "controls": [
+        "Threshold-aware aggregation rules (not just per-transaction)",
+        "Linked-party aggregation",
+        "Structuring-pattern detection over time windows"
+      ],
+      "capabilities": [
+        "transaction_monitoring",
+        "risk_scoring",
+        "case_management"
+      ]
+    },
+    {
+      "id": "KA-MLP-002",
+      "name": "Cash-intensive front",
+      "category": "ml_placement",
+      "description": "Commingling illicit cash with legitimate revenue of a cash-heavy business.",
+      "red_flags": [
+        "Revenue inconsistent with business type/peers",
+        "Deposits exceeding plausible legitimate volume"
+      ],
+      "controls": [
+        "Expected-activity profiling vs. peer baselines",
+        "KYB + ongoing review"
+      ],
+      "capabilities": [
+        "transaction_monitoring",
+        "kyb_business_verification",
+        "risk_scoring"
+      ]
+    },
+    {
+      "id": "KA-MLL-001",
+      "name": "Shell-company layering",
+      "category": "ml_layering",
+      "description": "Moving funds through layers of shell entities and nominee owners to obscure origin. FATF layering typology.",
+      "red_flags": [
+        "Complex ownership with no economic rationale",
+        "Nominee directors / mass-registration agents",
+        "Circular or rapid pass-through flows between related entities"
+      ],
+      "controls": [
+        "UBO resolution + KYB",
+        "Network/graph analysis of entity flows",
+        "Source-of-funds / source-of-wealth evidence"
+      ],
+      "capabilities": [
+        "kyb_business_verification",
+        "ubo_resolution",
+        "transaction_monitoring",
+        "case_management"
+      ]
+    },
+    {
+      "id": "KA-MLL-002",
+      "name": "Trade-based money laundering",
+      "category": "ml_layering",
+      "description": "Mis-invoicing trade (over/under-invoicing, phantom shipments) to move value across borders disguised as commerce.",
+      "red_flags": [
+        "Invoice values inconsistent with market/goods",
+        "Goods/route inconsistent with parties' profiles",
+        "Repeated amendments / circular trade"
+      ],
+      "controls": [
+        "Trade-document and price-benchmark review",
+        "Counterparty and route risk screening"
+      ],
+      "capabilities": [
+        "transaction_monitoring",
+        "kyb_business_verification",
+        "adverse_media"
+      ]
+    },
+    {
+      "id": "KA-MLL-003",
+      "name": "Rapid movement / pass-through",
+      "category": "ml_layering",
+      "description": "Funds enter and leave quickly with little economic purpose, often fanning out.",
+      "red_flags": [
+        "High in/out velocity, low residual balance",
+        "Fan-in/fan-out across many counterparties"
+      ],
+      "controls": [
+        "Velocity + flow-through rules",
+        "Counterparty network analysis"
+      ],
+      "capabilities": [
+        "transaction_monitoring",
+        "risk_scoring"
+      ]
+    },
+    {
+      "id": "KA-MLI-001",
+      "name": "Integration via high-value assets",
+      "category": "ml_integration",
+      "description": "Laundered funds re-enter the economy as real estate, luxury goods, or business investment with an apparently legitimate basis. FATF integration typology.",
+      "red_flags": [
+        "Asset purchases inconsistent with known income",
+        "Use of intermediaries/trusts to hold assets"
+      ],
+      "controls": [
+        "Source-of-wealth corroboration",
+        "Enhanced due diligence on large asset flows"
+      ],
+      "capabilities": [
+        "transaction_monitoring",
+        "adverse_media",
+        "case_management"
+      ]
+    },
+    {
+      "id": "KA-SAN-001",
+      "name": "Sanctions / PEP screening evasion",
+      "category": "sanctions_evasion",
+      "description": "Defeating watchlist screening via name variation, transliteration, nominee use, or jurisdiction hopping.",
+      "red_flags": [
+        "Near-miss name matches dismissed without review",
+        "Transliteration/alias variants of listed parties",
+        "Ownership links to sanctioned UBOs",
+        "Routing through high-risk / evasion-hub jurisdictions"
+      ],
+      "controls": [
+        "Fuzzy + transliteration-aware screening",
+        "UBO + ownership screening",
+        "Jurisdiction risk scoring",
+        "Documented match-disposition workflow"
+      ],
+      "capabilities": [
+        "sanctions_screening",
+        "pep_screening",
+        "ubo_resolution",
+        "case_management"
+      ]
+    },
+    {
+      "id": "KA-CRY-001",
+      "name": "Crypto mixing / tumbling",
+      "category": "crypto_laundering",
+      "description": "Use of mixers/tumblers to break the on-chain link between source and destination of crypto funds.",
+      "red_flags": [
+        "Exposure to known mixer addresses",
+        "Deposits sourced shortly after mixing"
+      ],
+      "controls": [
+        "Chain-analytics exposure scoring",
+        "Source-of-funds for crypto deposits"
+      ],
+      "capabilities": [
+        "chain_analytics",
+        "transaction_monitoring",
+        "risk_scoring"
+      ]
+    },
+    {
+      "id": "KA-CRY-002",
+      "name": "Chain-hopping / nested services",
+      "category": "crypto_laundering",
+      "description": "Swapping across assets/chains or routing through nested exchanges to obscure provenance.",
+      "red_flags": [
+        "Rapid cross-asset/cross-chain swaps",
+        "Counterparties identified as nested/high-risk VASPs"
+      ],
+      "controls": [
+        "Cross-chain tracing",
+        "VASP counterparty risk + Travel Rule data"
+      ],
+      "capabilities": [
+        "chain_analytics",
+        "transaction_monitoring"
+      ]
+    },
+    {
+      "id": "KA-CRY-003",
+      "name": "Peel chains",
+      "category": "crypto_laundering",
+      "description": "Iteratively peeling small amounts off a large balance across many hops to launder while hiding the principal.",
+      "red_flags": [
+        "Long sequences of single-input/two-output transfers",
+        "Gradual dispersal to many endpoints"
+      ],
+      "controls": [
+        "Peel-chain pattern detection",
+        "Hop-distance exposure scoring"
+      ],
+      "capabilities": [
+        "chain_analytics"
+      ]
+    }
+  ],
+  "providers": [
+    {
+      "key": "jumio",
+      "name": "Jumio",
+      "segment": "idv",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "biometric_match",
+        "database_idv",
+        "risk_scoring"
+      ],
+      "notes": "Document + biometric identity verification."
+    },
+    {
+      "key": "onfido",
+      "name": "Onfido",
+      "segment": "idv",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "biometric_match",
+        "database_idv"
+      ],
+      "notes": "Document + facial-biometric verification (Entrust)."
+    },
+    {
+      "key": "veriff",
+      "name": "Veriff",
+      "segment": "idv",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "biometric_match",
+        "device_intelligence"
+      ],
+      "notes": "IDV with fraud/device signals."
+    },
+    {
+      "key": "sumsub",
+      "name": "Sumsub",
+      "segment": "orchestration",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "sanctions_screening",
+        "pep_screening",
+        "transaction_monitoring",
+        "kyb_business_verification",
+        "case_management"
+      ],
+      "notes": "Full KYC/KYB/AML orchestration platform."
+    },
+    {
+      "key": "persona",
+      "name": "Persona",
+      "segment": "orchestration",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "database_idv",
+        "device_intelligence",
+        "case_management",
+        "risk_scoring"
+      ],
+      "notes": "Configurable IDV + workflow orchestration."
+    },
+    {
+      "key": "alloy",
+      "name": "Alloy",
+      "segment": "orchestration",
+      "capabilities": [
+        "database_idv",
+        "sanctions_screening",
+        "transaction_monitoring",
+        "kyb_business_verification",
+        "case_management",
+        "risk_scoring"
+      ],
+      "notes": "Identity decisioning + AML orchestration layer."
+    },
+    {
+      "key": "socure",
+      "name": "Socure",
+      "segment": "idv",
+      "capabilities": [
+        "database_idv",
+        "email_phone_intelligence",
+        "device_intelligence",
+        "risk_scoring",
+        "behavioral_biometrics"
+      ],
+      "notes": "Predictive identity / fraud risk."
+    },
+    {
+      "key": "sardine",
+      "name": "Sardine",
+      "segment": "aml",
+      "capabilities": [
+        "device_intelligence",
+        "behavioral_biometrics",
+        "transaction_monitoring",
+        "risk_scoring",
+        "chain_analytics"
+      ],
+      "notes": "Fraud + AML with device/behavior signals; crypto-aware."
+    },
+    {
+      "key": "unit21",
+      "name": "Unit21",
+      "segment": "aml",
+      "capabilities": [
+        "transaction_monitoring",
+        "case_management",
+        "risk_scoring"
+      ],
+      "notes": "Transaction monitoring + case management."
+    },
+    {
+      "key": "hummingbird",
+      "name": "Hummingbird",
+      "segment": "aml",
+      "capabilities": [
+        "case_management",
+        "transaction_monitoring"
+      ],
+      "notes": "AML investigations + SAR case management."
+    },
+    {
+      "key": "comply_advantage",
+      "name": "ComplyAdvantage",
+      "segment": "aml",
+      "capabilities": [
+        "sanctions_screening",
+        "pep_screening",
+        "adverse_media",
+        "transaction_monitoring"
+      ],
+      "notes": "Sanctions/PEP/adverse-media screening + monitoring."
+    },
+    {
+      "key": "refinitiv_wc",
+      "name": "LSEG World-Check",
+      "segment": "aml",
+      "capabilities": [
+        "sanctions_screening",
+        "pep_screening",
+        "adverse_media"
+      ],
+      "notes": "Watchlist / PEP / adverse-media reference data."
+    },
+    {
+      "key": "trulioo",
+      "name": "Trulioo",
+      "segment": "idv",
+      "capabilities": [
+        "database_idv",
+        "document_verification",
+        "kyb_business_verification",
+        "email_phone_intelligence"
+      ],
+      "notes": "Global identity + business verification."
+    },
+    {
+      "key": "middesk",
+      "name": "Middesk",
+      "segment": "kyb",
+      "capabilities": [
+        "kyb_business_verification",
+        "ubo_resolution"
+      ],
+      "notes": "Business identity / KYB + UBO."
+    },
+    {
+      "key": "chainalysis",
+      "name": "Chainalysis",
+      "segment": "crypto",
+      "capabilities": [
+        "chain_analytics",
+        "sanctions_screening",
+        "transaction_monitoring",
+        "risk_scoring"
+      ],
+      "notes": "Blockchain analytics + crypto sanctions/exposure."
+    },
+    {
+      "key": "elliptic",
+      "name": "Elliptic",
+      "segment": "crypto",
+      "capabilities": [
+        "chain_analytics",
+        "sanctions_screening",
+        "risk_scoring"
+      ],
+      "notes": "Crypto wallet/transaction risk + tracing."
+    },
+    {
+      "key": "trm",
+      "name": "TRM Labs",
+      "segment": "crypto",
+      "capabilities": [
+        "chain_analytics",
+        "transaction_monitoring",
+        "risk_scoring"
+      ],
+      "notes": "Crypto risk + investigations."
+    },
+    {
+      "key": "sentilink",
+      "name": "SentiLink",
+      "segment": "idv",
+      "capabilities": [
+        "database_idv",
+        "risk_scoring",
+        "email_phone_intelligence"
+      ],
+      "notes": "Synthetic / first-party fraud detection (US)."
+    },
+    {
+      "key": "prove",
+      "name": "Prove",
+      "segment": "idv",
+      "capabilities": [
+        "email_phone_intelligence",
+        "database_idv",
+        "device_intelligence"
+      ],
+      "notes": "Phone-centric identity / possession verification."
+    },
+    {
+      "key": "incode",
+      "name": "Incode",
+      "segment": "idv",
+      "capabilities": [
+        "document_verification",
+        "liveness_detection",
+        "biometric_match"
+      ],
+      "notes": "Biometric identity verification."
+    }
+  ]
+}
