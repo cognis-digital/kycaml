@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kycaml"
-version = "0.1.0"
+version = "0.1.1"
 description = "Defensive KYC/AML toolkit: fraud/AML threat taxonomy, provider catalog, and a streamlined provider-orchestration layer. For building KYC/AML controls, not evading them."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -15,6 +15,7 @@ keywords = ["kyc", "aml", "compliance", "anti-fraud", "fraud-detection",
             "identity-verification", "fatf", "financial-crime"]
 
 [project.scripts]
+"kycaml-emit" = "kycaml.connect:emit_main"
 kycaml = "kycaml.cli:main"
 
 [project.urls]
@@ -22,3 +23,6 @@ Homepage = "https://github.com/cognis-digital/kycaml"
 
 [tool.hatch.build.targets.wheel]
 packages = ["kycaml"]
+
+[project.optional-dependencies]
+connect = ["cognis-connect @ git+https://github.com/cognis-digital/cognis-connect.git"]
