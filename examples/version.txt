@@ -1,0 +1,3 @@
+$ kycaml-emit --version
+
+kycaml 0.1.0

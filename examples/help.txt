@@ -1,0 +1,24 @@
+$ kycaml-emit --help
+
+usage: kycaml [-h] [--version]
+              {threats,threat,providers,provider,capability,map,assess,demo} ...
+
+kycaml — KYC/AML defense toolkit CLI.
+
+  threats [--category C]        list the defender-oriented threat taxonomy
+  threat <ID>                   show one technique (signals, controls, capabilities)
+  providers [--segment S]       list the KYC/AML provider catalog
+  provider <key>                show one provider
+  capability <cap>              providers + techniques for a capability
+  map <TECHNIQUE_ID>            technique -> defending capabilities -> providers
+  assess --subject f.json [--txn t.json]   run the orchestrator (local mock)
+  demo                          run a built-in demo assessment
+
+--format table|json
+
+positional arguments:
+  {threats,threat,providers,provider,capability,map,assess,demo}
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit

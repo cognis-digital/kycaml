@@ -9,6 +9,129 @@
 [![tests](https://img.shields.io/badge/tests-14%20passing-2ea44f.svg)](tests/)
 
 <!-- cognis:layman:start -->
+
+<!-- cognis:example:start -->
+## 🔎 Example output
+
+Real, reproducible output from the tool — runs offline:
+
+```console
+$ kycaml-emit --version
+kycaml 0.1.0
+```
+
+```console
+$ kycaml-emit --help
+usage: kycaml [-h] [--version]
+              {threats,threat,providers,provider,capability,map,assess,demo} ...
+
+kycaml — KYC/AML defense toolkit CLI.
+
+  threats [--category C]        list the defender-oriented threat taxonomy
+  threat <ID>                   show one technique (signals, controls, capabilities)
+  providers [--segment S]       list the KYC/AML provider catalog
+  provider <key>                show one provider
+  capability <cap>              providers + techniques for a capability
+  map <TECHNIQUE_ID>            technique -> defending capabilities -> providers
+  assess --subject f.json [--txn t.json]   run the orchestrator (local mock)
+  demo                          run a built-in demo assessment
+
+--format table|json
+
+positional arguments:
+  {threats,threat,providers,provider,capability,map,assess,demo}
+
+options:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+```
+
+```console
+$ kycaml-emit demo
+{
+  "outcome": "deny",
+  "risk_score": 0.9,
+  "reasons": [
+    "identity verification weak (score 0.35)",
+    "sanctions/PEP screening hit: ivan petrov",
+    "transaction monitoring: structuring_near_threshold, high_velocity, high_risk_jurisdiction, mixer_exposure"
+  ],
+  "techniques": [
+    "KA-CRY-001",
+    "KA-IDF-001",
+    "KA-MLL-003",
+    "KA-MLP-001",
+    "KA-SAN-001"
+  ],
+  "recommended_controls": [
+    "Chain-analytics exposure scoring",
+    "Counterparty network analysis",
+    "Cross-record PII correlation across applicants",
+    "Documented match-disposition workflow",
+    "Fuzzy + transliteration-aware screening",
+    "Jurisdiction risk scoring",
+    "Linked-party aggregation",
+    "SSN-issuance/date-of-birth consistency checks",
+    "Source-of-funds for crypto deposits",
+    "Step-up verification on thin files",
+    "Structuring-pattern detection over time windows",
+    "Threshold-aware aggregation rules (not just per-transaction)",
+    "UBO + ownership screening",
+    "Velocity + flow-through rules",
+    "Velocity rules on shared identifiers"
+  ],
+  "detail": {
+    "identity": {
+      "verified": false,
+      "score": 0.35,
+      "checks": {
+        "document_present": true,
+        "selfie_present": true
+      },
+      "flags": [
+        "KA-IDF-001"
+      ],
+      "provider": "local"
+    },
+    "screening": {
+      "hit": true,
+      "matches": [
+        {
+          "name": "ivan petrov",
+          "type": "sanctioned",
+          "program": "DEMO-OFAC"
+        }
+      ],
+      "flags": [
+        "KA-SAN-001"
+      ],
+      "provider": "local"
+    },
+    "monitoring": {
+      "alert": true,
+      "rules_fired": [
+        "structuring_near_threshold",
+        "high_velocity",
+        "high_risk_jurisdiction",
+        "mixer_exposure"
+      ],
+      "flags": [
+        "KA-CRY-001",
+        "KA-MLL-003",
+        "KA-MLP-001",
+        "KA-SAN-001"
+      ],
+      "score": 1.0,
+      "provider": "local"
+    }
+  }
+}
+```
+
+> Blocks above are real `kycaml` output — reproduce them from a clone.
+
+<!-- cognis:example:end -->
+
 ## What is this?
 
 Banks, fintechs, and crypto platforms are legally required to verify who their
